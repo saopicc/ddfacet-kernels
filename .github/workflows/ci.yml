@@ -42,21 +42,21 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
+      - name: Checkout ddfacet-kernels
+        uses: actions/checkout@v4
+
       - name: Checkout the DDfacet code base
         uses: actions/checkout@v4
         with:
           repository: saopicc/DDFacet
-          path: ../DDFacet
-
-      - name: Checkout ddfacet-kernels
-        uses: actions/checkout@v4
+          path: DDFacet
 
       - name: Create a DDFacet virtualenv
         run: |
           uv venv --seed -p ${{ matrix.python-version }} ${{ runner.temp }}/ddf-venv
           source ${{ runner.temp }}/ddf-venv/bin/activate
           pip install -r gen-test-data/test-requirements.txt
-          PYTHONPATH=../DDFacet python gen-test-data/gen_test_data.py
+          PYTHONPATH=DDFacet python gen-test-data/gen_test_data.py
           ls -lh *.xz
 
       - name: Install the project with testing support
