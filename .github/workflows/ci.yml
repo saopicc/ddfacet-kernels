@@ -51,19 +51,20 @@ jobs:
           repository: saopicc/DDFacet
           path: DDFacet
 
-      - name: Create a DDFacet virtualenv
+      - name: Generate DDFacet test data within a virtual environment
         run: |
           uv venv --seed -p ${{ matrix.python-version }} ${{ runner.temp }}/ddf-venv
           source ${{ runner.temp }}/ddf-venv/bin/activate
           pip install -r gen-test-data/test-requirements.txt
           PYTHONPATH=DDFacet python gen-test-data/gen_test_data.py
           ls -lh *.xz
+          rm -rf DDFacet
 
       - name: Install the project with testing support
         run: uv sync --locked --extra tests
 
       - name: Run the test cases
-        run: uv run py.test -s -vvv
+        run: uv run py.test -s -vvv --ddf-test-data test-data.pickle.xz
 
       - name: Debug with tmate on failure
         if: ${{ failure() }}
