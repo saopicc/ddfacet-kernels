@@ -53,12 +53,12 @@ jobs:
 
       - name: Create a DDFacet virtualenv
         run: |
-          uv venv -p ${{ matrix.python-version }} ${{ runner.temp }}/ddf-venv
-          source ${{ runner.temp }}/ddf-venv/activate
+          uv venv --seed -p ${{ matrix.python-version }} ${{ runner.temp }}/ddf-venv
+          source ${{ runner.temp }}/ddf-venv/bin/activate
           pip install -r gen-test-data/test-requirements.txt
-          export PYTHONPATH=$PYTHONPATH:$(pwd)/ddfacet
-          python gen-test-data/gen_test_data.py
+          PYTHONPATH=ddfacet python gen-test-data/gen_test_data.py
           ls -lh *.xz
+          rm -rf ddfacet
 
       - name: Install the project with testing support
         run: uv sync --locked --extra tests
