@@ -38,6 +38,12 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
+      - name: Install the project with testing support
+        run: uv sync --locked --extra tests
+
+      - name: Run the test cases
+        run: uv run py.test -s -vvv
+
 
   deploy:
     needs: [test]
