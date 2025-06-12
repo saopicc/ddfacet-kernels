@@ -66,6 +66,10 @@ jobs:
       - name: Run the test cases
         run: uv run py.test -s -vvv
 
+      - name: Debug with tmate on failure
+        if: ${{ failure() }}
+        uses: mxschmitt/action-tmate@v3
+
 
   deploy:
     needs: [test]
