@@ -1,7 +1,12 @@
 name: Ubuntu CI
 
-on: [push, pull_request]
-
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: '30 2 * * 1,4' # Every Monday and Thursday @ 2h30am UTC
 
 jobs:
   check_skip:
