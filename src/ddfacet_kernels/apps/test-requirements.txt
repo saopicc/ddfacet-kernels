@@ -1,0 +1,6 @@
+numexpr
+scipy
+six
+SharedArray
+psutil
+pyfftw

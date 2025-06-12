@@ -1,0 +1,96 @@
+[project]
+name = "ddfacet-kernels"
+version = "0.1.0"
+description = "Package generating DDFacet W Kernels"
+readme = "README.md"
+authors = [
+    { name = "Simon Perkins", email = "simon.perkins@gmail.com" }
+]
+requires-python = ">=3.8"
+dependencies = [
+    "numpy>=1.24.4",
+]
+
+[project.scripts]
+ddfacet-kernels = "ddfacet_kernels:main"
+
+[project.optional-dependencies]
+tests = [
+    "pytest>=8.3.5",
+    "requests>=2.32.4",
+]
+dev = [
+    "pre-commit>=3.5.0",
+    "ruff>=0.11.13",
+    "tbump>=6.11.0",
+]
+numba = [
+    "numba>=0.58.1",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.ruff]
+line-length = 88
+indent-width = 2
+target-version = "py311"
+
+[tool.ruff.lint]
+extend-select = ["I"]
+select = [
+    # flake8-builtins
+    "A",
+    # flake8-bugbear
+    "B",
+    # isort
+    "I001",
+    "I002",
+    # tidy imports
+    "TID"
+]
+
+[tool.tbump.version]
+current = "0.4.1"
+
+# Example of a semver regexp.
+# Make sure this matches current_version before
+# using tbump
+regex = '''
+  (?P<major>\d+)
+  \.
+  (?P<minor>\d+)
+  \.
+  (?P<patch>\d+)
+  '''
+
+[tool.tbump.git]
+message_template = "Bump to {new_version}"
+tag_template = "{new_version}"
+
+# For each file to patch, add a [[tool.tbump.file]] config
+# section containing the path of the file, relative to the
+# tbump.toml location.
+[[tool.tbump.file]]
+src = "pyproject.toml"
+
+[[tool.tbump.file]]
+src = "ddfacet_kernels/__init__.py"
+
+[[tool.tbump.file]]
+src = "docs/conf.py"
+
+# You can specify a list of commands to
+# run after the files have been patched
+# and before the git commit is made
+
+#  [[tool.tbump.before_commit]]
+#  name = "check changelog"
+#  cmd = "grep -q {new_version} Changelog.rst"
+
+# Or run some commands after the git tag and the branch
+# have been pushed:
+#  [[tool.tbump.after_push]]
+#  name = "publish"
+#  cmd = "./publish.sh"
