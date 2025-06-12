@@ -45,7 +45,7 @@ jobs:
       - name: Checkout ddfacet-kernels
         uses: actions/checkout@v4
 
-      - name: Checkout the DDfacet code base
+      - name: Checkout the DDfacet code base with the DDFacet subdirectory
         uses: actions/checkout@v4
         with:
           repository: saopicc/DDFacet
@@ -66,10 +66,11 @@ jobs:
       - name: Run the test cases
         run: uv run py.test -s -vvv --ddf-test-data test-data.pickle.xz
 
-      - name: Debug with tmate on failure
-        if: ${{ failure() }}
-        uses: mxschmitt/action-tmate@v3
+      - name: Install the project with testing and numba support
+        run: uv sync --locked --extra tests --extra numba
 
+      - name: Run the test cases
+        run: uv run py.test -s -vvv --ddf-test-data test-data.pickle.xz
 
   deploy:
     needs: [test]
