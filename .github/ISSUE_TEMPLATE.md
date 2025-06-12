@@ -1,13 +1,13 @@
-* Codex Africanus version:
-* Python version:
-* Operating System:
+- ddfacet-kernels version:
+- Python version:
+- Operating System:
 
 ### Description
 
-Describe what you were trying to get done.
+Describe what you were trying to accomplish.
 Tell us what happened, what went wrong, and what you expected to happen.
 
-### What I Did
+### Reproducer and Error Logs
 
 ```
 Paste the command(s) you ran and the output.

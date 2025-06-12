@@ -1,26 +1,11 @@
-- [ ] Tests added / passed
+<!--
+Consider opening an enhancement issue
+if the change is large or complex.
+https://github.com/saopicc/ddfacet-kernels/issues/new/choose
+-->
 
-  ```bash
-  $ py.test -v -s africanus
-  ```
+Thanks for contributing to ddfacet-kernels.
 
-  If the pre-commit tests fail, install and
-  run the pre-commit hooks in your development
-  virtuale environment:
+We would appreciate it if you could add:
 
-  ```bash
-  $ pip install pre-commit
-  $ pre-commit install
-  $ pre-commit run -a
-  ```
-
-- [ ] Fully documented, including `HISTORY.rst` for all changes
-      and one of the `docs/*-api.rst` files for new API
-
-  To build the docs locally:
-
-  ```bash
-  pip install -r requirements.readthedocs.txt
-  cd docs
-  READTHEDOCS=True make html
-  ```
+- [ ] Test Cases covering your PR.

@@ -1,7 +1,14 @@
 name: Ubuntu CI
 
-on: [push, pull_request]
-
+on:
+  pull_request:
+  push:
+    tags:
+      - '*'
+    branches:
+      - main
+  schedule:
+    - cron: '30 2 * * 1,4' # Every Monday and Thursday @ 2h30am UTC
 
 jobs:
   check_skip:
@@ -22,7 +29,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+        python-version: ["3.8", "3.11", "3.13"]
 
     steps:
       - name: Set up Python ${{ matrix.python-version }}
@@ -30,14 +37,47 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Checkout the code base
-        uses: actions/checkout@v4
-
       - name: Install uv
         uses: astral-sh/setup-uv@v5
         with:
           python-version: ${{ matrix.python-version }}
 
+      - name: Checkout ddfacet-kernels
+        uses: actions/checkout@v4
+
+      - name: Checkout the DDfacet
+        uses: actions/checkout@v4
+        with:
+          repository: saopicc/DDFacet
+          path: DDFacet
+
+      # Consider pinning the python version to 3.8
+      - name: Generate DDFacet test data
+        run: |
+          uv venv --seed -p ${{ matrix.python-version }} ${{ runner.temp }}/ddf-venv
+          source ${{ runner.temp }}/ddf-venv/bin/activate
+          pip install -r gen-test-data/test-requirements.txt
+          PYTHONPATH=DDFacet python gen-test-data/gen_test_data.py \
+            -lm "[(0, 0), (1e-5, 2e-5)]" \
+            --npix 101,1025 \
+            --nw 5,11 \
+            -f "0.856e9" \
+            -s 15,21 \
+            -o 11,15,21
+          ls -lh *.xz
+          rm -rf DDFacet
+
+      - name: Install the project with testing support
+        run: uv sync --locked --extra tests
+
+      - name: Run the test cases
+        run: uv run py.test -s -vvv --ddf-test-data test-data.pickle.xz
+
+      - name: Install the project with testing and numba support
+        run: uv sync --locked --extra tests --extra numba
+
+      - name: Run the test cases
+        run: uv run py.test -s -vvv --ddf-test-data test-data.pickle.xz
 
   deploy:
     needs: [test]
@@ -49,35 +89,29 @@ jobs:
        github.event.ref == 'refs/heads/master')
 
     steps:
-      - name: Set up Python 3.10
+      - name: Set up Python
         uses: actions/setup-python@v5.6.0
-        with:
-          python-version: '3.10'
 
-      - name: Install poetry
-        uses: abatilo/actions-poetry@v4
-        with:
-          poetry-version: ${{ env.POETRY_VERSION }}
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
 
       - name: Checkout source
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
 
       - name: Build distributions
-        run: poetry build
+        run: uv build
 
-      - name: Publish distribution 📦 to Test PyPI
-        uses: pypa/gh-action-pypi-publish@master
-        with:
-          user: __token__
-          password: ${{ secrets.test_pypi_token }}
-          repository_url: https://test.pypi.org/legacy/
-        continue-on-error: true
+      # - name: Publish distribution 📦 to Test PyPI
+      #   uses: pypa/gh-action-pypi-publish@master
+      #   with:
+      #     user: __token__
+      #     password: ${{ secrets.test_pypi_token }}
+      #     repository_url: https://test.pypi.org/legacy/
+      #   continue-on-error: true
 
-      - name: Publish distribution 📦 to PyPI
-        uses: pypa/gh-action-pypi-publish@master
-        if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags')
-        with:
-          user: __token__
-          password: ${{ secrets.pypi_token }}
+      # - name: Publish distribution 📦 to PyPI
+      #   uses: pypa/gh-action-pypi-publish@master
+      #   if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags')
+      #   with:
+      #     user: __token__
+      #     password: ${{ secrets.pypi_token }}

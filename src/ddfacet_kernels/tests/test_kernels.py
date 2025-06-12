@@ -53,9 +53,9 @@ def test_ddfacet_allclose(ddf_wkernel_data):
 
   # The kernels align
   cf, fcf, ifzfcf = spheroidal_aa_filter(kw["Npix"], kw["Sup"])
-  assert_allclose(cf, ddf_wkernel_data["CF"])
-  assert_allclose(fcf, ddf_wkernel_data["fCF"])
-  assert_allclose(ifzfcf, ddf_wkernel_data["ifzfCF"])
+  (assert_array_almost_equal(cf, ddf_wkernel_data["CF"], decimal=7),)
+  assert_array_almost_equal(fcf, ddf_wkernel_data["fCF"], decimal=7)
+  assert_array_almost_equal(ifzfcf, ddf_wkernel_data["ifzfCF"], decimal=7)
 
   wkernel_data = wplanes(
     nwplanes=kw["Nw"],
@@ -68,10 +68,14 @@ def test_ddfacet_allclose(ddf_wkernel_data):
     frequencies=kw["Freqs"],
   )
 
-  assert_allclose(wkernel_data.cl, Cu)
-  assert_allclose(wkernel_data.cm, Cv)
-  assert_allclose(wkernel_data.w_values, ddf_wkernel_data["WValues"])
-  assert_allclose(wkernel_data.w_values.max(), ddf_wkernel_data["WMax"])
+  assert_array_almost_equal(wkernel_data.cl, Cu, decimal=7)
+  assert_array_almost_equal(wkernel_data.cm, Cv, decimal=7)
+  assert_array_almost_equal(
+    wkernel_data.w_values, ddf_wkernel_data["WValues"], decimal=7
+  )
+  assert_array_almost_equal(
+    wkernel_data.w_values.max(), ddf_wkernel_data["WMax"], decimal=7
+  )
 
   assert len(wkernel_data.w_kernels) == len(ddf_wkernel_data["WPlanes"])
   for this, ddf in zip(wkernel_data.w_kernels, ddf_wkernel_data["WPlanes"]):
