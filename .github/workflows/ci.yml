@@ -3,6 +3,8 @@ name: Ubuntu CI
 on:
   pull_request:
   push:
+    tags:
+      - '*'
     branches:
       - main
   schedule:
@@ -35,8 +37,16 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Checkout the code base
+      - name: Checkout the DDfacet code base
         uses: actions/checkout@v4
+        with:
+          repository: saopicc/DDFacet
+          path: ddfacet
+
+      - name: Checkout tools repo
+        uses: actions/checkout@v4
+        with:
+          path: kernels
 
       - name: Install uv
         uses: astral-sh/setup-uv@v5
@@ -45,9 +55,11 @@ jobs:
 
       - name: Install the project with testing support
         run: uv sync --locked --extra tests
+        working-directory: ./kernels
 
       - name: Run the test cases
         run: uv run py.test -s -vvv
+        working-directory: ./kernels
 
 
   deploy:
