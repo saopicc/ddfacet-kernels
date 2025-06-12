@@ -51,6 +51,7 @@ jobs:
           repository: saopicc/DDFacet
           path: DDFacet
 
+      # Consider pinning the python version to 3.8
       - name: Generate DDFacet test data
         run: |
           uv venv --seed -p ${{ matrix.python-version }} ${{ runner.temp }}/ddf-venv
