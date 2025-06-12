@@ -56,7 +56,13 @@ jobs:
           uv venv --seed -p ${{ matrix.python-version }} ${{ runner.temp }}/ddf-venv
           source ${{ runner.temp }}/ddf-venv/bin/activate
           pip install -r gen-test-data/test-requirements.txt
-          PYTHONPATH=DDFacet python gen-test-data/gen_test_data.py -lm "[(0, 0), (1e-5, 2e-5)]" --npix 101,1025 --nw 5,11 -f "0.856e9" -s 15,21 -o 11,15,21
+          PYTHONPATH=DDFacet python gen-test-data/gen_test_data.py \
+            -lm "[(0, 0), (1e-5, 2e-5)]" \
+            --npix 101,1025 \
+            --nw 5,11 \
+            -f "0.856e9" \
+            -s 15,21 \
+            -o 11,15,21
           ls -lh *.xz
           rm -rf DDFacet
 
