@@ -46,7 +46,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: saopicc/DDFacet
-          path: ddfacet
+          path: ../DDFacet
 
       - name: Checkout ddfacet-kernels
         uses: actions/checkout@v4
@@ -56,9 +56,8 @@ jobs:
           uv venv --seed -p ${{ matrix.python-version }} ${{ runner.temp }}/ddf-venv
           source ${{ runner.temp }}/ddf-venv/bin/activate
           pip install -r gen-test-data/test-requirements.txt
-          PYTHONPATH=ddfacet python gen-test-data/gen_test_data.py
+          PYTHONPATH=../DDFacet python gen-test-data/gen_test_data.py
           ls -lh *.xz
-          rm -rf ddfacet
 
       - name: Install the project with testing support
         run: uv sync --locked --extra tests
