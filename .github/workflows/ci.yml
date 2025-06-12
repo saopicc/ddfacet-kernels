@@ -45,13 +45,13 @@ jobs:
       - name: Checkout ddfacet-kernels
         uses: actions/checkout@v4
 
-      - name: Checkout the DDfacet code base with the DDFacet subdirectory
+      - name: Checkout the DDfacet
         uses: actions/checkout@v4
         with:
           repository: saopicc/DDFacet
           path: DDFacet
 
-      - name: Generate DDFacet test data within a virtual environment
+      - name: Generate DDFacet test data
         run: |
           uv venv --seed -p ${{ matrix.python-version }} ${{ runner.temp }}/ddf-venv
           source ${{ runner.temp }}/ddf-venv/bin/activate
