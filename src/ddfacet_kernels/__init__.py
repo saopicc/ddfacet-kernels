@@ -33,7 +33,6 @@ __version__ = "0.1.2"
 log = logging.getLogger(__name__)
 
 LIGHTSPEED = 2.99792458e8
-# TEST_DATA_FILENAME = "test-data.pickle.xz"
 
 
 def gen_numba_coeffs(x: npt.NDArray, y: npt.NDArray, order: int) -> npt.NDArray:
