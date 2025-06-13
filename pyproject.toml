@@ -1,6 +1,6 @@
 [project]
 name = "ddfacet-kernels"
-version = "0.1.1"
+version = "0.1.0"
 description = "Package generating DDFacet W Kernels"
 readme = "README.rst"
 authors = [
@@ -48,7 +48,7 @@ select = [
 ]
 
 [tool.tbump.version]
-current = "0.1.1"
+current = "0.1.0"
 
 # Example of a semver regexp.
 # Make sure this matches current_version before
