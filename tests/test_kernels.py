@@ -76,8 +76,8 @@ def test_ddfacet_allclose(ddf_wkernel_data):
   assert_array_almost_equal(
     wkernel_data.w_values.max(), ddf_wkernel_data["WMax"], decimal=7
   )
-  assert_array_almost_equal(wkernel_data.oversampling, kw["OverS"])
-  assert_array_almost_equal(wkernel_data.support, kw["Sup"])
+  assert_array_almost_equal(wkernel_data.oversampling, kw["OverS"], decimal=7)
+  assert_array_almost_equal(wkernel_data.support, kw["Sup"], decimal=7)
 
   assert len(wkernel_data.w_kernels) == len(ddf_wkernel_data["WPlanes"])
   for this, ddf in zip(wkernel_data.w_kernels, ddf_wkernel_data["WPlanes"]):
