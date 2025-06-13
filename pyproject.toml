@@ -73,6 +73,10 @@ src = "pyproject.toml"
 search = 'version = "{current_version}"'
 
 [[tool.tbump.file]]
+src = "uv.lock"
+search = 'version = "{current_version}"'
+
+[[tool.tbump.file]]
 src = "src/ddfacet_kernels/__init__.py"
 search = '__version__ = "{current_version}"'
 
