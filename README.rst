@@ -37,9 +37,9 @@ Usage
 
 .. code-block:: python
 
-  from ddfacet_kernels import wplanes
+  from ddfacet_kernels import facet_w_kernels
 
-  wterm_data = wplanes(
+  wterm_data = facet_w_kernels(
     nwplanes=7,
     cell_size=0.2  # arc-seconds
     support=15,

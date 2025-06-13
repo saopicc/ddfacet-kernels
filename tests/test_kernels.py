@@ -13,7 +13,7 @@ from ddfacet_kernels import (
   gen_numba_coeffs,
   gen_numpy_coeffs,
   spheroidal_aa_filter,
-  wplanes,
+  facet_w_kernels,
 )
 
 
@@ -57,7 +57,7 @@ def test_ddfacet_allclose(ddf_wkernel_data):
   assert_array_almost_equal(fcf, ddf_wkernel_data["fCF"], decimal=7)
   assert_array_almost_equal(ifzfcf, ddf_wkernel_data["ifzfCF"], decimal=7)
 
-  wkernel_data = wplanes(
+  wkernel_data = facet_w_kernels(
     nwplanes=kw["Nw"],
     cell_size=kw["Cell"],
     support=kw["Sup"],
