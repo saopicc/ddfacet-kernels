@@ -37,10 +37,8 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Install uv
-        uses: astral-sh/setup-uv@v5
-        with:
-          python-version: ${{ matrix.python-version }}
+      - name: Install virtualenv
+        run: python -m pip install virtualenv
 
       - name: Checkout ddfacet-kernels
         uses: actions/checkout@v4
@@ -54,7 +52,7 @@ jobs:
       # Consider pinning the python version to 3.8
       - name: Generate DDFacet test data
         run: |
-          uv venv --seed -p ${{ matrix.python-version }} ${{ runner.temp }}/ddf-venv
+          python -m virtualenv -p ${{ matrix.python-version }} ${{ runner.temp }}/ddf-venv
           source ${{ runner.temp }}/ddf-venv/bin/activate
           pip install -r gen-test-data/test-requirements.txt
           PYTHONPATH=DDFacet python gen-test-data/gen_test_data.py \
@@ -68,16 +66,16 @@ jobs:
           rm -rf DDFacet
 
       - name: Install the project with testing support
-        run: uv sync --locked --extra tests
+        run: python -m pip install -e .[tests]
 
       - name: Run the test cases
-        run: uv run py.test -s -vvv --ddf-test-data test-data.pickle.xz
+        run: py.test -s -vvv --ddf-test-data test-data.pickle.xz
 
       - name: Install the project with testing and numba support
-        run: uv sync --locked --extra tests --extra numba
+        run: python -m pip install -e .[tests,numba]
 
       - name: Run the test cases
-        run: uv run py.test -s -vvv --ddf-test-data test-data.pickle.xz
+        run: py.test -s -vvv --ddf-test-data test-data.pickle.xz
 
   test-pypi-publish:
     needs: [test]
@@ -95,14 +93,14 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5.6.0
 
-      - name: Install uv
-        uses: astral-sh/setup-uv@v5
-
       - name: Checkout source
         uses: actions/checkout@v4
 
+      - name: Install build
+        run: python -m install --upgrade build
+
       - name: Build distributions
-        run: uv build
+        run: python -m build
 
       - name: Publish package distributions to TestPyPI
         uses: pypa/gh-action-pypi-publish@release/v1
@@ -123,14 +121,14 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5.6.0
 
-      - name: Install uv
-        uses: astral-sh/setup-uv@v5
-
       - name: Checkout source
         uses: actions/checkout@v4
 
+      - name: Install build
+        run: python -m install --upgrade build
+
       - name: Build distributions
-        run: uv build
+        run: python -m build
 
       - name: Publish package distributions to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
