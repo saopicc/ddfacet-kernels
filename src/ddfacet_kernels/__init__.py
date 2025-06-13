@@ -28,7 +28,7 @@ try:
 except ImportError:
   numba = None
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 log = logging.getLogger(__name__)
 
