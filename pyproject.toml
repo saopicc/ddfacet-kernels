@@ -2,7 +2,7 @@
 name = "ddfacet-kernels"
 version = "0.1.0"
 description = "Package generating DDFacet W Kernels"
-readme = "README.md"
+readme = "README.rst"
 authors = [
     { name = "Simon Perkins", email = "simon.perkins@gmail.com" }
 ]
