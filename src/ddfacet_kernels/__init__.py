@@ -12,6 +12,8 @@ try:
 except ImportError:
   numba = None
 
+__version__ = "0.1.0"
+
 log = logging.getLogger(__name__)
 
 LIGHTSPEED = 2.99792458e8
