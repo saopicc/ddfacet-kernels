@@ -97,7 +97,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install build
-        run: python -m install --upgrade build
+        run: python -m pip install --upgrade build
 
       - name: Build distributions
         run: python -m build
@@ -125,7 +125,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install build
-        run: python -m install --upgrade build
+        run: python -m pip install --upgrade build
 
       - name: Build distributions
         run: python -m build
