@@ -361,7 +361,7 @@ def reorganise_convolution_filter(cf: npt.NDArray, oversampling: int) -> npt.NDA
     for j in range(oversampling):
       result[i, j, :, :] = cf[i::oversampling, j::oversampling]
 
-  return result.reshape(cf.shape)
+  return result
 
 
 def find_max_support(radius: float, maxw: float, min_wave: float) -> int:
@@ -436,17 +436,13 @@ class FacetWKernelData:
   #   U′= U − W · l0
   #   V′= V − W · m0
   clm: Tuple[float, float]
-  # The kernel support
-  support: int
-  # The kernel oversampling factor
-  oversampling: int
   # W values for each plane
   w_values: npt.NDArray[np.float64]
-  # Flattened W Kernels for each W plane
-  # Can be reshaped to (oversampling, oversampling, support, support)
+  # W Kernels for each W plane
+  # with shape (oversampling, oversampling, support, support)
   w_kernels: List[npt.NDArray[np.complex64]]
   # Flattened Conjugate W kernels for each W plane
-  # Can be reshaped to (oversampling, oversampling, support, support)
+  # with shape (oversampling, oversampling, support, support)
   w_kernels_conj: List[npt.NDArray[np.complex64]]
 
   @property
@@ -473,6 +469,40 @@ class FacetWKernelData:
   def nwplanes(self) -> int:
     """Number of w planes"""
     return len(self.w_kernels)
+
+  @property
+  def oversampling(self) -> int:
+    """Oversampling factor"""
+    assert len(self.w_kernels) > 0
+    return self.w_kernels[0].shape[0]  # (o, o, s, s)
+
+  @property
+  def support(self) -> int:
+    """Kernel Support"""
+    assert len(self.w_kernels) > 0
+    return self.w_kernels[0].shape[2]  # (o, o, s, s)
+
+  @property
+  def w_kernels_ravel(self) -> List[npt.NDArray[np.complex64]]:
+    """Return flattened versions of the w kernels
+
+    NOTE: There is some indexing/conceptual issue here that needs
+    to be addressed. reorganise_convolution_filter produces an
+    (o, o, s, s) shape, but these filters are shaped to (o * s, o * s) here.
+    However, This reshaping produces values that agree with DDFacet.
+    """
+    return [
+      wk.reshape((wk.shape[0] * wk.shape[2]), (wk.shape[0] * wk.shape[2]))
+      for wk in self.w_kernels
+    ]
+
+  @property
+  def w_kernels_conj_ravel(self) -> List[npt.NDArray[np.complex64]]:
+    """Return flattened versions of the conjugate w kernels"""
+    return [
+      wkc.reshape((wkc.shape[0] * wkc.shape[2]), (wkc.shape[0] * wkc.shape[2]))
+      for wkc in self.w_kernels_conj
+    ]
 
 
 def facet_w_kernels(
@@ -547,9 +577,7 @@ def facet_w_kernels(
     fzw = np.require(fzw, dtype=np.complex64, requirements=["A", "C"])
     fzw_conj = np.require(fzw_conj, dtype=np.complex64, requirements=["A", "C"])
 
-    return FacetWKernelData(
-      (l0, m0), (cl, cm), support, oversampling, w_values, [fzw], [fzw_conj]
-    )
+    return FacetWKernelData((l0, m0), (cl, cm), w_values, [fzw], [fzw_conj])
 
   wkernels = []
   wkernels_conj = []
@@ -591,6 +619,4 @@ def facet_w_kernels(
     wkernels.append(fzw)
     wkernels_conj.append(fzw_conj)
 
-  return FacetWKernelData(
-    (l0, m0), (cl, cm), support, oversampling, w_values, wkernels, wkernels_conj
-  )
+  return FacetWKernelData((l0, m0), (cl, cm), w_values, wkernels, wkernels_conj)
