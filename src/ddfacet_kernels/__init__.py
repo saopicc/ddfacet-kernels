@@ -567,7 +567,3 @@ def wplanes(
     wkernels_conj.append(fzw_conj)
 
   return FacetWKernelData((l0, m0), (cl, cm), w_values, wkernels, wkernels_conj)
-
-
-def main() -> None:
-  print("Hello from ddfacet-kernels!")

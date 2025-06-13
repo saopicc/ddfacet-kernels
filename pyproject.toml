@@ -11,9 +11,6 @@ dependencies = [
     "numpy>=1.24.4",
 ]
 
-[project.scripts]
-ddfacet-kernels = "ddfacet_kernels:main"
-
 [project.optional-dependencies]
 tests = [
     "pytest>=8.3.5",
