@@ -39,7 +39,7 @@ Usage
 
   from ddfacet_kernels import facet_w_kernels
 
-  wterm_data = facet_w_kernels(
+  facet_data = facet_w_kernels(
     nwplanes=7,
     cell_size=0.2  # arc-seconds
     support=15,
