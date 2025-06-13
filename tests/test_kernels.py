@@ -80,8 +80,10 @@ def test_ddfacet_allclose(ddf_wkernel_data):
   assert_array_almost_equal(wkernel_data.support, kw["Sup"], decimal=7)
 
   assert len(wkernel_data.w_kernels) == len(ddf_wkernel_data["WPlanes"])
-  for this, ddf in zip(wkernel_data.w_kernels, ddf_wkernel_data["WPlanes"]):
+  for this, ddf in zip(wkernel_data.w_kernels_ravel, ddf_wkernel_data["WPlanes"]):
     assert_array_almost_equal(this, ddf, decimal=7)
 
-  for this, ddf in zip(wkernel_data.w_kernels_conj, ddf_wkernel_data["WPlanesConj"]):
+  for this, ddf in zip(
+    wkernel_data.w_kernels_conj_ravel, ddf_wkernel_data["WPlanesConj"]
+  ):
     assert_array_almost_equal(this, ddf, decimal=7)
