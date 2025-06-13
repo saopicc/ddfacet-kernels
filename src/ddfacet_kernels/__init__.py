@@ -484,25 +484,19 @@ class FacetWKernelData:
 
   @property
   def w_kernels_ravel(self) -> List[npt.NDArray[np.complex64]]:
-    """Return flattened versions of the w kernels
-
-    NOTE: There is some indexing/conceptual issue here that needs
-    to be addressed. reorganise_convolution_filter produces an
-    (o, o, s, s) shape, but these filters are shaped to (o * s, o * s) here.
-    However, This reshaping produces values that agree with DDFacet.
-    """
-    return [
-      wk.reshape((wk.shape[0] * wk.shape[2]), (wk.shape[0] * wk.shape[2]))
-      for wk in self.w_kernels
-    ]
+    """Return flattened versions of the w kernels"""
+    return [self._reshape_kernel(wk) for wk in self.w_kernels]
 
   @property
   def w_kernels_conj_ravel(self) -> List[npt.NDArray[np.complex64]]:
     """Return flattened versions of the conjugate w kernels"""
-    return [
-      wkc.reshape((wkc.shape[0] * wkc.shape[2]), (wkc.shape[0] * wkc.shape[2]))
-      for wkc in self.w_kernels_conj
-    ]
+    return [self._reshape_kernel(wkc) for wkc in self.w_kernels_conj]
+
+  def _reshape_kernel(
+    self, kernel: npt.NDArray[np.complex64]
+  ) -> npt.NDArray[np.complex64]:
+    o, _, s, _ = kernel.shape
+    return kernel.reshape((o * s, o * s))
 
 
 def facet_w_kernels(
