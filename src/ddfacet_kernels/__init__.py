@@ -443,9 +443,11 @@ class FacetWKernelData:
   oversampling: int
   # W values for each plane
   w_values: npt.NDArray[np.float64]
-  # W Kernels for each W plane
+  # Flattened W Kernels for each W plane
+  # Can be reshaped to (oversampling, oversampling, support, support)
   w_kernels: List[npt.NDArray[np.complex64]]
-  # Conjugate W kernels for each W plane
+  # Flattened Conjugate W kernels for each W plane
+  # Can be reshaped to (oversampling, oversampling, support, support)
   w_kernels_conj: List[npt.NDArray[np.complex64]]
 
   @property
