@@ -437,11 +437,17 @@ class FacetWKernelData:
   #   U′= U − W · l0
   #   V′= V − W · m0
   clm: Tuple[float, float]
+  # The kernel support
+  support: int
+  # The kernel oversampling factor
+  oversampling: int
   # W values for each plane
   w_values: npt.NDArray[np.float64]
-  # W Kernels for each W plane
+  # Flattened W Kernels for each W plane
+  # Can be reshaped to (oversampling, oversampling, support, support)
   w_kernels: List[npt.NDArray[np.complex64]]
-  # Conjugate W kernels for each W plane
+  # Flattened Conjugate W kernels for each W plane
+  # Can be reshaped to (oversampling, oversampling, support, support)
   w_kernels_conj: List[npt.NDArray[np.complex64]]
 
   @property
@@ -470,7 +476,7 @@ class FacetWKernelData:
     return len(self.w_kernels)
 
 
-def wplanes(
+def facet_w_kernels(
   nwplanes: int,
   cell_size: float,
   support: int,
@@ -480,7 +486,7 @@ def wplanes(
   lmshift: Tuple[float],
   frequencies: npt.NDArray[np.floating],
 ) -> FacetWKernelData:
-  """Compute W projection planes and their conjugates
+  """Compute Facet gridding kernels and their conjugates
 
   Args:
     nwplanes : Number of W planes
@@ -542,7 +548,9 @@ def wplanes(
     fzw = np.require(fzw, dtype=np.complex64, requirements=["A", "C"])
     fzw_conj = np.require(fzw_conj, dtype=np.complex64, requirements=["A", "C"])
 
-    return FacetWKernelData((l0, m0), (cl, cm), w_values, [fzw], [fzw_conj])
+    return FacetWKernelData(
+      (l0, m0), (cl, cm), support, oversampling, w_values, [fzw], [fzw_conj]
+    )
 
   wkernels = []
   wkernels_conj = []
@@ -584,4 +592,6 @@ def wplanes(
     wkernels.append(fzw)
     wkernels_conj.append(fzw_conj)
 
-  return FacetWKernelData((l0, m0), (cl, cm), w_values, wkernels, wkernels_conj)
+  return FacetWKernelData(
+    (l0, m0), (cl, cm), support, oversampling, w_values, wkernels, wkernels_conj
+  )
