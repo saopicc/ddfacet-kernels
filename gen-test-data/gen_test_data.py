@@ -12,18 +12,8 @@ import numpy as np
 
 
 def parse_lm_pairs(lm_str: str) -> Tuple[float]:
-  """
-  Regular expression to capture pairs of floats within parentheses
-  (   : Matches the opening parenthesis
-  -?  : Optionally matches a minus sign (for negative numbers)
-  \d+ : Matches one or more digits
-  \.  : Matches the literal dot (for decimal numbers)
-  \d* : Matches zero or more digits after the decimal point
-  ,   : Matches the comma separator
-  \s* : Matches zero or more whitespace characters
-  )   : Matches the closing parenthesis
-  """
-  pattern = re.compile(r"\(([-]?\d+\.?\d*),\s*([-]?\d+\.?\d*)\)")
+  # Regular expression to capture pairs of floats within comma-separated parentheses
+  pattern = re.compile(r"\((.*?),\s*(.*?)\)")
 
   lm = []
 
